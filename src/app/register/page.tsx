@@ -26,6 +26,7 @@ function Register() {
         password_confirmation: ""
       });
     } catch (error: any) {
+      setUser({...user, password: "", password_confirmation: ""});
       toast.error(error.response.data.message);
     } finally {
       setLoading(false);
