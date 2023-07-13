@@ -9,9 +9,11 @@ const SelectionStatus: FC<SelectionStatusProps> = ({ steps }) => {
   const [progressPercentage, setProgressPercentage] = useState(0);
 
   useEffect(() => {
-    const totalSteps = steps.length;
-    const completedSteps = steps.filter(step => step.status === 'completed').length;
-    setProgressPercentage((completedSteps / totalSteps) * 100);
+    setTimeout(() => {
+      const totalSteps = steps.length;
+      const completedSteps = steps.filter(step => step.status === 'completed').length;
+      setProgressPercentage((completedSteps / totalSteps) * 100);
+    }, 1000);
   }, [steps]);
 
   return (

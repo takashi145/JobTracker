@@ -54,7 +54,7 @@ export default function CompanyPage() {
     setTimeout(() => {
       setEvent(initialEvent);
       setLoading(false);
-    }, 3000);
+    }, 1000);
   }, [])
   
   useEffect(() => {

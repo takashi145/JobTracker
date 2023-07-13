@@ -90,12 +90,12 @@ function Event() {
     
   }, []);
 
-  const getEvents = async () => {
-    try {
-      await axios.get('/api/event');
-    } catch (error: any) {
-    }
-  }
+  // const getEvents = async () => {
+  //   try {
+  //     await axios.get('/api/event');
+  //   } catch (error: any) {
+  //   }
+  // }
 
   return (
     <div className="py-12">
