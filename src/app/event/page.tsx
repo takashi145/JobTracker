@@ -1,6 +1,7 @@
 "use client";
 import SelectionStatus from '@/components/SelectionStatus';
 import { Event } from '@/types';
+import axios from 'axios';
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 
@@ -83,7 +84,15 @@ function Event() {
 
   useEffect(() => {
     setEvents(initialEvents);
+    getEvents();
   }, []);
+
+  const getEvents = async () => {
+    try {
+      await axios.get('/api/event');
+    } catch (error: any) {
+    }
+  }
 
   return (
     <div className="py-12">

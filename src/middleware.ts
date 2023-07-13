@@ -3,7 +3,7 @@ import { verifyJwtToken } from "./app/lib/auth";
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
-  const isPublicPage = path === "/login" || path === "/register";
+  const isPublicPage = path === "/" || path === "/login" || path === "/register";
   const token = request.cookies.get("token")?.value || "";
 
   const verifiedToken = token &&
@@ -12,7 +12,7 @@ export async function middleware(request: NextRequest) {
         }));
 
   if (isPublicPage && verifiedToken) {
-    return NextResponse.redirect(new URL("/", request.nextUrl));
+    return NextResponse.redirect(new URL("/event", request.nextUrl));
   }
 
   if (!isPublicPage && !verifiedToken) {
@@ -27,5 +27,6 @@ export const config = {
     "/",
     "/login",
     "/register",
+    "/event/:path*"
   ],
 };
