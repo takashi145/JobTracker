@@ -18,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className='bg-gray-800 min-h-screen'>
+        <div className='bg-gray-200 dark:bg-gray-800 min-h-screen'>
           <nav className="bg-white border-gray-200 dark:bg-gray-900">
             <div className="max-w-7xl flex flex-wrap items-center justify-between mx-auto p-4">
               <a href="#" className="flex items-center dark:text-white">

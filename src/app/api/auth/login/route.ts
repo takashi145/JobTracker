@@ -12,11 +12,11 @@ export async function POST(request: NextRequest) {
 
     const user = await User.findOne({ email: req.email });
     if (!user) {
-      throw new Error("email already exists");
+      throw new Error("メールアドレス又はパスワードが間違っています");
     }
 
     if(!await bcrypt.compare(req.password, user.password)) {
-      throw new Error("Invalid Credentials");
+      throw new Error("メールアドレス又はパスワードが間違っています");
     }
 
     const dataToEncrypt = {
