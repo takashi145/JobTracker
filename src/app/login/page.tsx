@@ -23,7 +23,7 @@ function Login() {
         email: "",
         password: "",
       });
-      router.push('/');
+      router.push('/event');
     } catch (error: any) {
       setUser({...user, password: ""});
       toast.error(error.response.data.message);
