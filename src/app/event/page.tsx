@@ -83,8 +83,11 @@ function Event() {
   const [events, setEvents] = useState<Event[]>([]);
 
   useEffect(() => {
-    setEvents(initialEvents);
-    getEvents();
+    setTimeout(() => {
+      setEvents(initialEvents);
+      // getEvents();
+    }, 1000);
+    
   }, []);
 
   const getEvents = async () => {
