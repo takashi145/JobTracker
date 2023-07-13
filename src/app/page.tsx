@@ -1,10 +1,13 @@
+import ApplicationLogo from "@/components/ApplicationLogo";
 import Link from "next/link";
 
 export default async function Home() {
   return (
     <div className="dark:border-t dark:border-gray-700 bg-center bg-repeat bg-[url('/images/jobtracker.PNG')] h-screen bg-gray-500 bg-blend-multiply">
         <div className="px-4 mx-auto max-w-screen-xl text-center py-24 lg:py-40">
-            <h1 className="mb-4 text-5xl font-extrabold tracking-tight leading-none text-white md:text-5xl lg:text-6xl">JobTracker</h1>
+            <h1 className="mb-4 text-5xl font-extrabold tracking-tight leading-none text-white md:text-5xl lg:text-6xl">
+              <ApplicationLogo />
+            </h1>
             <p className="mb-8 text-lg font-normal text-gray-300 lg:text-xl sm:px-16 lg:px-48">
               JobTrackerへようこそ。選考状況を視覚化し、あなたの就職活動を明確かつ楽に管理します。登録し、新たな旅を始めましょう。
             </p>
@@ -18,6 +21,5 @@ export default async function Home() {
             </div>
         </div>
     </div>
-
   )
 }
