@@ -1,24 +1,44 @@
 "use client";
 import React, { useState } from 'react';
 import Link from 'next/link';
+import axios from 'axios';
+import { toast } from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 const CreateEvent = () => {
 
   const [newEventTitle, setNewEventTitle] = useState('');
   const [newEventDescription, setNewEventDescription] = useState('');
 
+  const router = useRouter();
+
   const addEvent = async () => {
     const data = {
       title: newEventTitle,
       description: newEventDescription
     };
+
+    try {
+      const response = await axios.post('/api/event', data);
+      toast.success(response.data.message);
+      router.push('/event');
+    } catch(error: any) {
+      toast.error(error.response.data.message);
+    }
     
     setNewEventTitle('');
     setNewEventDescription('');
   };
 
   return (
-    <form action="" method="POST" className="pt-4 pb-12">
+    <form 
+      onSubmit={(e) => {
+        e.preventDefault();
+        addEvent();
+      }} 
+      method="POST" 
+      className="pt-4 pb-12"
+    >
       <div className="px-3 md:px-8 mb-3">
         <Link href="/event" className="text-blue-500 hover:text-blue-600 dark:text-blue-400 hover:dark:text-blue-500 hover:underline">
           ←戻る
@@ -53,8 +73,7 @@ const CreateEvent = () => {
               ></textarea>
             </div>
             <button
-              type="button"
-              onClick={addEvent}
+              type="submit"
               className="w-full text-blue-500 hover:text-white border border-blue-500 hover:border-blue-600 hover:bg-blue-400 rounded-lg p-2 mb-4"
             >
               作成

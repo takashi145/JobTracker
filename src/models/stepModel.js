@@ -19,4 +19,6 @@ const stepSchema = new mongoose.Schema({
 });
 
 
-export default mongoose.models.stepSchema || mongoose.model('steps', stepSchema);
+const model = mongoose.models.steps || mongoose.model("steps", stepSchema);
+
+export default model;
