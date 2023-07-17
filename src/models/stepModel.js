@@ -12,7 +12,6 @@ const stepSchema = new mongoose.Schema({
     ref: 'events',
   },
   name: String,
-  order: Number,
   deadline: Date,
   status: String,
   description: String,

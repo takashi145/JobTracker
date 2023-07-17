@@ -3,40 +3,10 @@ import { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { Event } from '@/types';
 import Loading from '@/components/Loading';
+import axios from 'axios';
+import { useSearchParams } from 'next/navigation';
 
-const initialEvent = {
-  _id: 1,
-  title: "イベント１",
-  description: "イベント１の詳細説明",
-  steps: [
-    {
-      _id: 1,
-      name: "ステップ１",
-      description: "ステップ１の詳細説明",
-      order: 1,
-      deadline: new Date(2023, 8, 10),
-      status: "completed",
-    },
-    {
-      _id: 2,
-      name: "ステップ２",
-      description: "ステップ２の詳細説明",
-      order: 2,
-      deadline: new Date(2023, 8, 20),
-      status: "completed",
-    },
-    {
-      _id: 3,
-      name: "ステップ3",
-      description: "ステップ3の詳細説明",
-      order: 3,
-      deadline: new Date(2023, 8, 20),
-      status: "completed",
-    },
-  ],
-};
-
-export default function CompanyPage() {
+export default function CompanyPage({params}: { params: { id: string }}) {
   const [event, setEvent] = useState<Event | null>(null);
   const [loading, setLoading] = useState(true);
   const [animatedProgress, setAnimatedProgress] = useState(0);
@@ -50,11 +20,19 @@ export default function CompanyPage() {
     return Math.round((completedSteps / totalSteps) * 100);
   }, [event]);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setEvent(initialEvent);
+  const getEvent = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`/api/event/${params.id}`);
+      setEvent(response.data.data);
+    } catch(error: any) {
+    }finally {
       setLoading(false);
-    }, 500);
+    }
+  }
+
+  useEffect(() => {
+    getEvent();
   }, [])
   
   useEffect(() => {
@@ -93,25 +71,25 @@ export default function CompanyPage() {
         <h2 className="text-gray-700 text-3xl font-semibold text-center dark:text-white">{event.title}</h2>
       </div>
 
-      <div className="p-8 sm:p-14 mb-12 flex justify-center flex-col-reverse sm:flex-row items-center sm:items-stretch sm:space-x-20 lg:space-x-32">
-        <ol className="relative text-gray-500 border-l border-gray-300 dark:border-gray-700 dark:text-gray-400">
+      <div className="p-8 sm:p-14 mb-12 flex justify-center flex-col-reverse sm:flex-row items-center sm:space-x-20 lg:space-x-32">
+        <ol className="relative text-gray-500 border-l border-gray-300 dark:border-gray-700 dark:text-gray-400 space-y-20">
           {event.steps.map((step, index) => (
-            <li key={index} className="mb-10 sm:mb-12 pl-10">
+            <li key={index} className="mb-10 sm:mb-12 pl-14 md:pl-12">
               {step.status === 'completed' ?
-                <div className="absolute flex items-center justify-center w-8 h-8 md:w-12 md:h-12 bg-green-400 rounded-full -left-4 md:-left-8 ring-4 ring-white dark:ring-gray-900 dark:bg-green-900">
+                <div className="absolute flex items-center justify-center w-12 h-12 bg-green-400 rounded-full -left-4 md:-left-8 ring-4 ring-white dark:ring-gray-900 dark:bg-green-900">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 text-green-100">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
                   </svg>
                 </div>
                 :
-                <div className="absolute flex items-center justify-center w-8 h-8 md:w-12 md:h-12 bg-gray-300 rounded-full -left-4 md:-left-8 ring-4 ring-white hover:scale-110 hover:cursor-pointer dark:ring-gray-900 dark:bg-gray-700"></div>
+                <div className="absolute flex items-center justify-center w-12 h-12 bg-gray-300 rounded-full -left-4 md:-left-8 ring-4 ring-white hover:scale-110 hover:cursor-pointer dark:ring-gray-900 dark:bg-gray-700"></div>
               }
-              <h3 className={`pt-1 pb-3 font-medium leading-tight ${step.status === 'completed' ? 'text-blue-400' : ''}`}>{step.name}</h3>
-              <p className='text-sm md:text-md'>期限 : 2023/05/29 10:00:00</p>
+              <h3 className={`pt-3 pb-3 font-medium leading-tight ${step.status === 'completed' ? 'text-blue-400' : ''}`}>{step.name}</h3>
+              <p className='text-sm md:text-md'>{step.deadline ? `期限： ${step.deadline}` : ''}</p>
             </li>
           ))}
           <li className="mb-10">
-            <span className={`${progressPercentage === 100 ? 'bg-gray-200 text-orange-400' : 'bg-gray-300 dark:bg-gray-600'} absolute flex items-center justify-center w-8 h-8 md:w-12 md:h-12 rounded-full -left-4 md:-left-8 ring-4 ring-white dark:ring-gray-900`}> 
+            <span className={`${progressPercentage === 100 ? 'bg-gray-200 text-orange-400' : 'bg-gray-300 dark:bg-gray-600'} absolute flex items-center justify-center w-12 h-12 rounded-full -left-4 md:-left-8 ring-4 ring-white dark:ring-gray-900`}> 
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5 text-gray-400">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 18.75h-9m9 0a3 3 0 013 3h-15a3 3 0 013-3m9 0v-3.375c0-.621-.503-1.125-1.125-1.125h-.871M7.5 18.75v-3.375c0-.621.504-1.125 1.125-1.125h.872m5.007 0H9.497m5.007 0a7.454 7.454 0 01-.982-3.172M9.497 14.25a7.454 7.454 0 00.981-3.172M5.25 4.236c-.982.143-1.954.317-2.916.52A6.003 6.003 0 007.73 9.728M5.25 4.236V4.5c0 2.108.966 3.99 2.48 5.228M5.25 4.236V2.721C7.456 2.41 9.71 2.25 12 2.25c2.291 0 4.545.16 6.75.47v1.516M7.73 9.728a6.726 6.726 0 002.748 1.35m8.272-6.842V4.5c0 2.108-.966 3.99-2.48 5.228m2.48-5.492a46.32 46.32 0 012.916.52 6.003 6.003 0 01-5.395 4.972m0 0a6.726 6.726 0 01-2.749 1.35m0 0a6.772 6.772 0 01-3.044 0" />
               </svg>

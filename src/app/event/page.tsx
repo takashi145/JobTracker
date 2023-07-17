@@ -5,85 +5,11 @@ import axios from 'axios';
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 
-const initialEvents = [
-  {
-    _id: 1,
-    title: "イベント１",
-    description: "イベント１の詳細説明",
-    steps: [
-      {
-        _id: 1,
-        name: "ステップ１",
-        description: "ステップ１の詳細説明",
-        order: 1,
-        deadline: new Date(2023, 8, 10),
-        status: "completed",
-      },
-      {
-        _id: 2,
-        name: "ステップ２",
-        description: "ステップ２の詳細説明",
-        order: 2,
-        deadline: new Date(2023, 8, 20),
-        status: "completed",
-      },
-      {
-        _id: 3,
-        name: "ステップ3",
-        description: "ステップ3の詳細説明",
-        order: 3,
-        deadline: new Date(2023, 8, 20),
-        status: "completed",
-      },
-    ],
-  },
-  {
-    _id: 2,
-    title: "イベント2",
-    description: "イベント２の詳細説明",
-    steps: [
-      {
-        _id: 4,
-        name: "ステップ4",
-        description: "ステップ4の詳細説明",
-        order: 1,
-        deadline: new Date(2023, 9, 10),
-        status: "completed",
-      },
-      {
-        _id: 5,
-        name: "ステップ5",
-        description: "ステップ5の詳細説明",
-        order: 2,
-        deadline: new Date(2023, 9, 20),
-        status: "completed",
-      },
-      {
-        _id: 6,
-        name: "ステップ6",
-        description: "ステップ6の詳細説明",
-        order: 3,
-        deadline: new Date(2023, 9, 10),
-        status: "",
-      },
-      {
-        _id: 7,
-        name: "ステップ7",
-        description: "ステップ7の詳細説明",
-        order: 4,
-        deadline: new Date(2023, 9, 20),
-        status: "",
-      },
-    ],
-  },
-];
-
 function Event() {
 
   const [events, setEvents] = useState<Event[]>([]);
 
   useEffect(() => {
-    // setEvents(initialEvents);
     getEvents();
   }, []);
 
