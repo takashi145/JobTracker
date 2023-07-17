@@ -17,7 +17,7 @@ const SelectionStatus: FC<SelectionStatusProps> = ({ steps }) => {
   }, [steps]);
 
   return (
-    <div className="flex flex-col items-center justify-center py-8 space-y-6">
+    <div className="flex flex-col items-center justify-center py-8 space-y-4">
       <div className="w-full flex items-center justify-center">
         <div className="w-3/4 h-3 bg-white rounded-full flex items-center overflow-hidden dark:bg-gray-200">
           <div 
@@ -51,7 +51,7 @@ const SelectionStatus: FC<SelectionStatusProps> = ({ steps }) => {
         steps.length === 0 && (
           <div className="flex flex-col md:flex-row items-center text-center dark:text-gray-400">
             ステップが登録されていません。
-            <a href="#" className='ml-2 text-blue-500 dark:text-blue-400 underline'>ステップを追加→</a>
+            <a href="#" className='mt-2 ml-2 text-blue-500 dark:text-blue-400 underline'>ステップを追加→</a>
           </div>
         )
       }
