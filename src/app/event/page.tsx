@@ -1,4 +1,5 @@
 "use client";
+import Loading from '@/components/Loading';
 import SelectionStatus from '@/components/SelectionStatus';
 import { Event } from '@/types';
 import axios from 'axios';
@@ -9,16 +10,29 @@ function Event() {
 
   const [events, setEvents] = useState<Event[]>([]);
 
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     getEvents();
   }, []);
 
   const getEvents = async () => {
+    setLoading(true);
     try {
       const response = await axios.get('/api/event');
       setEvents(response.data.data);
     } catch (error: any) {
+    }finally {
+      setTimeout(() => {
+        setLoading(false);
+      }, 500)
     }
+  }
+
+  if (loading) {
+    return (
+      <Loading />
+    )
   }
 
   return (
