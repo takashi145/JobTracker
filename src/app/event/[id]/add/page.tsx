@@ -46,8 +46,15 @@ const AddStep = ({params}: { params: { id: string }}) => {
     }
   };
 
-  const removeEvent = (index: number) => {
-    //
+  const deleteStep = async (stepId: string) => {
+    try {
+      const response = await axios.delete(`/api/event/${params.id}/step/${stepId}`);
+      toast.success(response.data.message);
+
+      setSteps(steps => steps.filter(step => step._id !== stepId));
+    } catch(error: any) {
+      toast.error(error.response.data.message);
+    }
   };
 
   useEffect(() => {
@@ -67,14 +74,14 @@ const AddStep = ({params}: { params: { id: string }}) => {
             <div>
               <button
                 type="button"
-                onClick={() => removeEvent(step._id)}
+                onClick={() => alert(step._id)}
                 className="self-start ml-4 p-2 text-blue-500 hover:text-blue-600 border border-blue-500 hover:border-blue-600 rounded-lg"
               >
                 編集
               </button>
               <button
                 type="button"
-                onClick={() => removeEvent(step._id)}
+                onClick={() => deleteStep(step._id)}
                 className="self-start ml-4 p-2 text-red-500 hover:text-red-600 border border-red-500 hover:border-red-600 rounded-lg"
               >
                 削除
