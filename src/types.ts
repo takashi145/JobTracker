@@ -1,15 +1,15 @@
 export interface Step {
   _id: any,
-  name: String,
-  description: String,
-  order: Number,
+  name: string,
+  description: string,
+  order: number,
   deadline: Date | null,
-  status: String,
+  status: string,
 }
 
 export interface Event {
   _id: any,
-  title: String,
-  description: String,
+  title: string,
+  description: string,
   steps: Step[]
 }
