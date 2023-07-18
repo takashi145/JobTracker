@@ -51,34 +51,30 @@ export async function POST(
       return NextResponse.json({ message: 'Failed to authenticate token' }, { status: 401 });
     }
 
-    const promises = req.map((step: any) => {
-      const newStep = new Step({
-        userId: userId,
-        eventId: eventId,
-        name: step.name,
-        description: step.description,
-        status: step.status,
-        deadline: step.deadline,
-      });
-
-      return newStep.save();
+    const newStep = new Step({
+      userId: userId,
+      eventId: eventId,
+      name: req.name,
+      description: req.description,
+      status: req.status,
+      deadline: req.deadline,
     });
 
-    const steps = await Promise.all(promises);
-    const stepIds = steps.map(step => step._id);
+    const step = await newStep.save();
 
     const event = await Event.findById(eventId);
     if (!event) {
       return NextResponse.json({ message: 'Event not found'}, { status: 404 });
     }
 
-    event.steps.push(...stepIds);
+    event.steps.push(step._id);
 
     await event.save();
     
     return NextResponse.json({
       message: "successfully",
       success: true,
+      data: step,
     });
 
   } catch (error: any) {

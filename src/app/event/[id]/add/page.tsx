@@ -1,9 +1,10 @@
 "use client";
+import { Step } from '@/types';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast';
 
-export interface Step {
+export interface NewStep {
   name: string,
   description: string,
   deadline: Date | null,
@@ -11,15 +12,18 @@ export interface Step {
 }
 
 const AddStep = ({params}: { params: { id: string }}) => {
-  const [newSteps, setNewSteps] = useState<Step[]>([{ name: '', description: '', deadline: null, status: '' }]);
+  const [steps, setSteps] = useState<Step[]>([]);
+  const [newStep, setNewStep] = useState<NewStep>({ name: '', description: '', deadline: null, status: '' });
+  const [openModal, setOpenModal] = useState(false);
 
   const getSteps = async () => {
     try {
       const response = await axios.get(`/api/event/${params.id}/step`);
       const steps = response.data.data;
 
-      setNewSteps(() => [
+      setSteps(() => [
         ...steps.map((step: Step) => ({
+          _id: step._id,
           name: step.name,
           description: step.description,
           deadline: step.deadline,
@@ -30,49 +34,20 @@ const AddStep = ({params}: { params: { id: string }}) => {
     }
   }
 
-  const save = async () => {
+  const addStep = async () => {
     try {
-      const response = await axios.post(`/api/event/${params.id}/step`, newSteps);
+      const response = await axios.post(`/api/event/${params.id}/step`, newStep);
+      setSteps([...steps, response.data.data]);
       toast.success(response.data.message);
+      setNewStep({ name: '', description: '', deadline: null, status: '' });
+      setOpenModal(false);
     } catch(error: any) {
       toast.error(error.response.data.message);
     }
-  }
-
-  const addStep = () => {
-    setNewSteps([...newSteps, { name: '', description: '', deadline: null, status: '' }]);
   };
 
-  const removeEventField = (index: number) => {
-    if (newSteps.length > 1) {
-      const newEventsCopy = [...newSteps];
-      newEventsCopy.splice(index, 1);
-      setNewSteps(newEventsCopy);
-    }
-  };
-
-  const handleStepNameChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-    const newStepsCopy = [...newSteps];
-    newStepsCopy[index].name = e.target.value;
-    setNewSteps(newStepsCopy);
-  };
-
-  const handleStepDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>, index: number) => {
-    const newStepsCopy = [...newSteps];
-    newStepsCopy[index].description = e.target.value;
-    setNewSteps(newStepsCopy);
-  };
-
-  const handleStepDeadlineChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-    const newStepsCopy = [...newSteps];
-    newStepsCopy[index].deadline = new Date(e.target.value);
-    setNewSteps(newStepsCopy);
-  };
-
-  const handleStepStatusChange = (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
-    const newStepsCopy = [...newSteps];
-    newStepsCopy[index].status = e.target.value;
-    setNewSteps(newStepsCopy);
+  const removeEvent = (index: number) => {
+    //
   };
 
   useEffect(() => {
@@ -80,91 +55,53 @@ const AddStep = ({params}: { params: { id: string }}) => {
   }, []);
 
   return (
-    <form 
-      onSubmit={(e) => {
-        e.preventDefault();
-        save();
-      }}
-      className='py-12 px-8'
-    >
-      <div className='mb-6 flex justify-between items-center'>
-        <h6 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">ステップを追加</h6>
-        <button
-         type='submit'
-         className='text-white bg-blue-600 dark:bg-blue-500 px-3 py-2 rounded'
-        >Save</button>
-      </div>
-      
+    <div className='py-12 px-8'>
       <div className="w-full grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {newSteps.map((newStep, index) => (
-        <div key={index} className="mb-8 lg:mb-0 w-full max-w-xl p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+      {steps.map(step => (
+        <div key={step._id} className="mb-8 lg:mb-0 w-full max-w-xl p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-slate-800 dark:border-gray-700">
           <div className="mb-4 flex justify-between">
             <div>
               <label htmlFor="step-name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Step Name</label>
-              <input
-                type="text"
-                name="step-name"
-                id="step-name"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                placeholder=""
-                required
-                value={newStep.name}
-                onChange={(e) => handleStepNameChange(e, index)}
-              />
+              <div className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">{step.name}</div>
             </div>
-            <button
-              type="button"
-              onClick={() => removeEventField(index)}
-              disabled={newSteps.length <= 1}
-              className="self-start ml-4 p-2 text-red-500 hover:text-red-600 border border-red-500 hover:border-red-600 rounded-lg"
-            >
-              削除
-            </button>
+            <div>
+              <button
+                type="button"
+                onClick={() => removeEvent(step._id)}
+                className="self-start ml-4 p-2 text-blue-500 hover:text-blue-600 border border-blue-500 hover:border-blue-600 rounded-lg"
+              >
+                編集
+              </button>
+              <button
+                type="button"
+                onClick={() => removeEvent(step._id)}
+                className="self-start ml-4 p-2 text-red-500 hover:text-red-600 border border-red-500 hover:border-red-600 rounded-lg"
+              >
+                削除
+              </button>  
+            </div>
+            
           </div>
           <div className='mb-3'>
-            <label htmlFor="step-description" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Step Description</label>
-            <textarea
-              name="step-description"
-              id="step-description"
-              placeholder=""
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-              value={newStep.description}
-              onChange={(e) => handleStepDescriptionChange(e, index)}
-            ></textarea>  
-          </div>
-          
-          <div className='mb-3'>
-            <label htmlFor="step-deadline" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Step Deadline</label>
-            <input
-              type="date"
-              name="step-deadline"
-              id="step-deadline"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-              placeholder=""
-              value={newStep.deadline ? newStep.deadline.toISOString().substring(0, 10) : ''}
-              onChange={(e) => handleStepDeadlineChange(e, index)}
-            />  
+            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Step Description</label>
+            <div className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">{step.description ? step.description : ''}</div>
           </div>
           
           <div className='mb-3'>
-            <label htmlFor="step-status" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Step Status</label>
-            <input
-              type="text"
-              name="step-status"
-              id="step-status"
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-              placeholder=""
-              required
-              value={newStep.status}
-              onChange={(e) => handleStepStatusChange(e, index)}
-            />  
+            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Step Deadline</label>
+            <div className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">{step.deadline ? step.deadline : '期限なし'}</div> 
+          </div>
+          
+          <div className='mb-3'>
+            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Step Status</label>
+            <div className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">{step.status}</div>
           </div>
          
         </div>
       ))}
         <button
           type="button"
-          onClick={addStep}
+          onClick={() => setOpenModal(true)}
           className="flex items-center text-blue-500 hover:text-white border border-blue-500 hover:border-blue-600 hover:bg-blue-400 rounded p-2 mb-4 max-h-12"
         >
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
@@ -173,7 +110,87 @@ const AddStep = ({params}: { params: { id: string }}) => {
           ステップを追加
         </button>
       </div>
-    </form>
+
+      {openModal && (
+        <div className='fixed inset-0 bg-black/50 z-40'>
+            <div aria-hidden="true" className={`${openModal ? 'z-50' : 'hidden'} z-50 flex justify-center items-center w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full`}>
+                <div className="relative w-full max-w-md max-h-full">
+                    <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                        <button onClick={() => setOpenModal(false)} type="button" className="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="authentication-modal">
+                            <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                            </svg>
+                        </button>
+                        <div className="px-6 py-6 lg:px-8">
+                            <h3 className="mb-4 text-xl font-medium text-gray-900 dark:text-white">Sign in to our platform</h3>
+                            <form onSubmit={(e) => {
+                                e.preventDefault();
+                                addStep();
+                              }} 
+                              className="lg:mb-0 w-full max-w-x p-2"
+                            >
+                              <div className='mb-3'>
+                                <label htmlFor="step-name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Step Name</label>
+                                <input
+                                  type="text"
+                                  name="step-name"
+                                  id="step-name"
+                                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                  placeholder=""
+                                  required
+                                  value={newStep.name}
+                                  onChange={(e) => setNewStep({...newStep, name: e.target.value})}
+                                />
+                              </div>
+
+                              <div className='mb-3'>
+                                <label htmlFor="step-description" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Step Description</label>
+                                <textarea
+                                  name="step-description"
+                                  id="step-description"
+                                  placeholder=""
+                                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                  value={newStep.description}
+                                  onChange={(e) => setNewStep({...newStep, description: e.target.value})}
+                                ></textarea>  
+                              </div>
+                              
+                              <div className='mb-3'>
+                                <label htmlFor="step-deadline" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Step Deadline</label>
+                                <input
+                                  type="date"
+                                  name="step-deadline"
+                                  id="step-deadline"
+                                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                  placeholder=""
+                                  value={newStep.deadline ? newStep.deadline.toISOString().substring(0, 10) : ''}
+                                  onChange={(e) => setNewStep({...newStep, deadline: new Date(e.target.value)})}
+                                />  
+                              </div>
+                              
+                              <div className='mb-3'>
+                                <label htmlFor="step-status" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Step Status</label>
+                                <input
+                                  type="text"
+                                  name="step-status"
+                                  id="step-status"
+                                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                                  placeholder=""
+                                  required
+                                  value={newStep.status}
+                                  onChange={(e) => setNewStep({...newStep, status: e.target.value})}
+                                />  
+                              </div>
+
+                              <button type='submit' className='text-white bg-blue-500 dark:bg-blue-600 py-2 px-3 rounded shadow w-full'>Save</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      )}
+    </div>
   )
 }
 
