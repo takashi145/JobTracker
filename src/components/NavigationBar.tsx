@@ -21,6 +21,10 @@ const NavigationBar = () => {
     }
   }
 
+  if (pathname === '/') {
+    return <></>
+  }
+
   return (
     <nav className="bg-gray-200 border-gray-200 dark:bg-gray-900 shadow">
       <div className="max-w-7xl flex flex-wrap items-center justify-between mx-auto p-4">
