@@ -1,4 +1,5 @@
 import { Step } from '@/types';
+import Link from 'next/link';
 import { useState, useEffect, FC } from 'react';
 
 interface SelectionStatusProps {
@@ -32,7 +33,7 @@ const SelectionStatus: FC<SelectionStatusProps> = ({ steps }) => {
         </div>
       </div>
 
-      <div className="w-3/4 flex flex-nowrap overflow-x-auto justify-between">
+      <div className={`w-3/4 flex flex-nowrap overflow-x-auto ${steps.length >= 2 ? 'justify-between' : 'justify-center'}`}>
         {steps.map((step, index) => (
           <div key={index} className="flex flex-col items-center mr-3">
             <div className={`${step.status === 'completed' ? 'text-blue-500' : 'text-gray-600 dark:text-gray-400'} text-xs sm:text-sm md:text-md`}>
@@ -46,15 +47,6 @@ const SelectionStatus: FC<SelectionStatusProps> = ({ steps }) => {
           </div>
         ))}
       </div>
-
-      {
-        steps.length === 0 && (
-          <div className="flex flex-col md:flex-row items-center text-center dark:text-gray-400">
-            ステップが登録されていません。
-            <a href="#" className='mt-2 ml-2 text-blue-500 dark:text-blue-400 underline'>ステップを追加→</a>
-          </div>
-        )
-      }
 
       {progressPercentage === 100 && (
         <div className="text-green-500 text-xl font-bold">

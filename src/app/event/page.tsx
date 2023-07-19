@@ -51,11 +51,20 @@ function Event() {
       
       {events.length >= 1 && events.map((event) => (
         <div key={event._id} className="py-8 max-w-5xl mx-auto mb-8 border-b border-gray-300 dark:border-gray-600">
-          <h2 className="text-xl text-center font-semibold text-gray-700 dark:text-white">
+          <h2 className="mr-4 text-xl text-center font-semibold text-gray-700 dark:text-white">
             {event.title}
           </h2>
           
           <SelectionStatus steps={event.steps} />
+
+          {
+            event.steps.length === 0 && (
+              <div className="flex flex-col md:flex-row items-center justify-center text-center dark:text-gray-400">
+                ステップが登録されていません。
+                <Link href={`/event/${event._id}/step`} className='mt-2 ml-2 text-blue-500 dark:text-blue-400 underline'>ステップを追加→</Link>
+              </div>
+            )
+          }
 
           <div className="text-end px-8">
             <Link href={`/event/${event._id}`} className="text-blue-400 hover:text-blue-600 hover:underline">

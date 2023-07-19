@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { Event } from '@/types';
 import Loading from '@/components/Loading';
 import axios from 'axios';
-import { useSearchParams } from 'next/navigation';
 
 export default function CompanyPage({params}: { params: { id: string }}) {
   const [event, setEvent] = useState<Event | null>(null);
@@ -17,6 +16,11 @@ export default function CompanyPage({params}: { params: { id: string }}) {
     }
     const totalSteps = event.steps.length;
     const completedSteps = event.steps.filter(step => step.status === 'completed').length;
+
+    if (totalSteps === 0) {
+      return 0;
+    }
+
     return Math.round((completedSteps / totalSteps) * 100);
   }, [event]);
 
@@ -38,7 +42,7 @@ export default function CompanyPage({params}: { params: { id: string }}) {
   useEffect(() => {
     let currentProgress = 0;
     const increment = progressPercentage / 100;
-
+    
     const animateProgress = () => {
       currentProgress += increment;
       if (currentProgress < progressPercentage) {
@@ -69,6 +73,9 @@ export default function CompanyPage({params}: { params: { id: string }}) {
     
       <div className="mt-3">
         <h2 className="text-gray-700 text-3xl font-semibold text-center dark:text-white">{event.title}</h2>
+        <div className='text-center mt-2'>
+          <Link href={`/event/${params.id}/step`} className='text-sm text-blue-500 dark:text-blue-400 hover:underline'>ステップを管理 →</Link>
+        </div>
       </div>
 
       <div className="p-8 sm:p-14 mb-12 flex justify-center flex-col-reverse sm:flex-row items-center sm:space-x-20 lg:space-x-32">
@@ -82,7 +89,7 @@ export default function CompanyPage({params}: { params: { id: string }}) {
                   </svg>
                 </div>
                 :
-                <div className="absolute flex items-center justify-center w-12 h-12 bg-gray-300 rounded-full -left-4 md:-left-8 ring-4 ring-white hover:scale-110 hover:cursor-pointer dark:ring-gray-900 dark:bg-gray-700"></div>
+                <div className="absolute flex items-center justify-center w-12 h-12 bg-gray-300 rounded-full -left-4 md:-left-8 ring-4 ring-white dark:ring-gray-900 dark:bg-gray-700"></div>
               }
               <h3 className={`pt-3 pb-3 font-medium leading-tight ${step.status === 'completed' ? 'text-blue-400' : ''}`}>{step.name}</h3>
               <p className='text-sm md:text-md'>{step.deadline ? `期限： ${step.deadline}` : ''}</p>

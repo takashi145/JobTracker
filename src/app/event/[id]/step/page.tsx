@@ -1,6 +1,8 @@
 "use client";
+import Loading from '@/components/Loading';
 import { Step } from '@/types';
 import axios from 'axios';
+import Link from 'next/link';
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast';
 
@@ -17,6 +19,7 @@ const AddStep = ({params}: { params: { id: string }}) => {
   const [editStep, setEditStep] = useState<NewStep>({ name: '', description: '', deadline: null, status: '' });
   const [openModal, setOpenModal] = useState(false);
   const [openEditModalId, setOpenEditModalId] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const getSteps = async () => {
     try {
@@ -33,6 +36,8 @@ const AddStep = ({params}: { params: { id: string }}) => {
         }))
       ]);
     } catch(error: any) {
+    }finally {
+      setLoading(false);
     }
   }
 
@@ -72,8 +77,17 @@ const AddStep = ({params}: { params: { id: string }}) => {
     getSteps();
   }, []);
 
+  if (loading) {
+    return <Loading />
+  }
+
   return (
-    <div className='py-12 px-8'>
+    <div className='py-10 px-8'>
+      <div className="pb-5">
+        <Link href={`/event/${params.id}`} className="text-blue-500 hover:text-blue-600 dark:text-blue-400 hover:dark:text-blue-500 hover:underline">
+          ←戻る
+        </Link>
+      </div>
       <div className="w-full grid md:grid-cols-2 lg:grid-cols-3 gap-6">
       {steps.map(step => (
         <div key={step._id} className="mb-8 lg:mb-0 w-full max-w-xl p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-slate-800 dark:border-gray-700">

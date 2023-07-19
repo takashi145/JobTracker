@@ -12,7 +12,7 @@ export async function GET(
 
     const eventId = params.id;
 
-    const events = await Event.findById(eventId).populate('steps', 'name deadline status', Step);
+    const events = await Event.findById(eventId).populate('steps', '_id name deadline status', Step);
       
     return NextResponse.json({
       message: "successfully",
