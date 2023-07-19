@@ -1,4 +1,5 @@
 "use client";
+import ApplicationLogo from '@/components/ApplicationLogo';
 import Loading from '@/components/Loading';
 import axios from 'axios';
 import Link from 'next/link';
@@ -43,7 +44,9 @@ function Login() {
         }} 
         className='w-full max-w-md p-8 bg-white dark:bg-gray-900 mx-auto rounded-lg shadow'
       >
-        <h2 className='text-2xl dark:text-white mb-6 text-center'>Sign In</h2>
+        <h2 className='text-2xl dark:text-white mb-6 text-center'>
+          <ApplicationLogo />
+        </h2>
         <div className="mb-4">
           <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
           <input type="email" id="email" value={user.email} onChange={(e) => setUser({ ...user, email: e.target.value })} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" required />
