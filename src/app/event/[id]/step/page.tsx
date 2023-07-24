@@ -46,7 +46,7 @@ const AddStep = ({params}: { params: { id: string }}) => {
       const response = await axios.post(`/api/event/${params.id}/step`, newStep);
       setSteps([...steps, response.data.data]);
       toast.success(response.data.message);
-      setNewStep({ name: '', description: '', deadline: null, status: '' });
+      setNewStep({ name: '', description: '', deadline: null, status: 0 });
       setOpenModal(false);
     } catch(error: any) {
       toast.error(error.response.data.message);
@@ -71,7 +71,7 @@ const AddStep = ({params}: { params: { id: string }}) => {
 
   const deleteStep = async (stepId: string) => {
     if (! confirm('削除してもよろしいですか？')) return;
-
+    
     try {
       const response = await axios.delete(`/api/event/${params.id}/step/${stepId}`);
       toast.success(response.data.message);

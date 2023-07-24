@@ -46,7 +46,7 @@ function Register() {
         className='w-full max-w-md p-8 bg-white dark:bg-gray-900 mx-auto rounded-lg shadow'
       >
         <h2 className='text-2xl dark:text-white mb-6 text-center'>
-          <ApplicationLogo />
+          新規登録
         </h2>
         <div className="mb-4">
           <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
