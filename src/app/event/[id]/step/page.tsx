@@ -56,7 +56,14 @@ const AddStep = ({params}: { params: { id: string }}) => {
   const updateStep = async (stepId: string) => {
     try {
       const response = await axios.put(`/api/event/${params.id}/step/${stepId}`, editStep);
+      setSteps(steps => steps.map(step => {
+        if (step._id === stepId) {
+          return response.data.data;
+        }
+        return step;
+      }));
       toast.success(response.data.message);
+      setOpenEditModalId(null);
     } catch(error: any) {
       toast.error(error.response.data.message);
     }

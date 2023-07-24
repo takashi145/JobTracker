@@ -54,7 +54,8 @@ export async function PUT(
     
     return NextResponse.json({
       message: "successfully",
-      success: true
+      success: true,
+      data: step,
     });
 
   } catch (error: any) {
