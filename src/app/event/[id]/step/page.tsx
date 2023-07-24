@@ -63,6 +63,8 @@ const AddStep = ({params}: { params: { id: string }}) => {
   }
 
   const deleteStep = async (stepId: string) => {
+    if (! confirm('削除してもよろしいですか？')) return;
+
     try {
       const response = await axios.delete(`/api/event/${params.id}/step/${stepId}`);
       toast.success(response.data.message);
@@ -159,7 +161,7 @@ const AddStep = ({params}: { params: { id: string }}) => {
                                         id="step-deadline"
                                         className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                                         placeholder=""
-                                        value={editStep.deadline ? editStep.deadline.toISOString().substring(0, 10) : ''}
+                                        value={editStep.deadline ? new Date(editStep.deadline).toISOString().substring(0, 10) : ''}
                                         onChange={(e) => setEditStep({...editStep, deadline: new Date(e.target.value)})}
                                       />  
                                     </div>
@@ -187,7 +189,6 @@ const AddStep = ({params}: { params: { id: string }}) => {
                 </div>
               )}
 
-
               <button
                 type="button"
                 onClick={() => deleteStep(step._id)}
@@ -205,7 +206,7 @@ const AddStep = ({params}: { params: { id: string }}) => {
           
           <div className='mb-3'>
             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Step Deadline</label>
-            <div className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">{step.deadline ? step.deadline : '期限なし'}</div> 
+            <div className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">{step.deadline ? new Date(step.deadline).toISOString().substring(0, 10) : '期限なし'}</div> 
           </div>
           
           <div className='mb-3'>
