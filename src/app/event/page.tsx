@@ -37,10 +37,10 @@ function Event() {
 
   return (
     <div className="relative py-8">
-      <div className='flex justify-end pr-4 pb-4 border-b border-gray-600'>
+      <div className='flex justify-end pr-4 pb-3 border-b border-gray-600'>
         <Link 
           href="/event/create" 
-          className='flex items-center text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 hover:dark:bg-blue-600 focus:ring-4 px-3 py-2 rounded shadow'
+          className='flex items-center text-sm text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 hover:dark:bg-blue-600 focus:ring-4 px-3 py-2 rounded shadow'
         >
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-4 h-4 mr-1">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />

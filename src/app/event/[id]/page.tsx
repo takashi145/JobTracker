@@ -71,9 +71,10 @@ export default function CompanyPage({params}: { params: { id: string }}) {
         </Link>
       </div>
     
-      <div className="mt-3">
+      <div className="m-3 space-y-3">
         <h2 className="text-gray-700 text-3xl font-semibold text-center dark:text-white">{event.title}</h2>
-        <div className='text-center mt-2'>
+        <p className="px-3 sm:px-0 w-full sm:w-2/3 mx-auto text-gray-700 font-semibold dark:text-gray-300 text-center" style={{wordWrap: 'break-word'}}>{event.description}</p>
+        <div className='text-center'>
           <Link href={`/event/${params.id}/step`} className='text-sm text-blue-500 dark:text-blue-400 hover:underline'>ステップを管理 →</Link>
         </div>
       </div>
@@ -92,7 +93,7 @@ export default function CompanyPage({params}: { params: { id: string }}) {
                 <div className="absolute flex items-center justify-center w-12 h-12 bg-gray-300 rounded-full -left-4 md:-left-8 ring-4 ring-white dark:ring-gray-900 dark:bg-gray-700"></div>
               }
               <h3 className={`pt-3 pb-3 font-medium leading-tight ${step.status === 'completed' ? 'text-blue-400' : ''}`}>{step.name}</h3>
-              <p className='text-sm md:text-md'>{step.deadline ? `期限： ${step.deadline}` : ''}</p>
+              <p className='text-sm md:text-md'>{step.deadline ? `日付： ${new Date(step.deadline).toISOString().substring(0, 10)}` : ''}</p>
             </li>
           ))}
           <li className="mb-10">
