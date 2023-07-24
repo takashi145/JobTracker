@@ -1,6 +1,4 @@
 "use client";
-import ApplicationLogo from '@/components/ApplicationLogo';
-import Loading from '@/components/Loading';
 import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -35,9 +33,6 @@ function Login() {
 
   return (
     <div className='flex justify-center py-14'>
-      { loading && 
-        <Loading /> 
-      }
       <form onSubmit={(e) => {
           e.preventDefault();
           handleLogin();

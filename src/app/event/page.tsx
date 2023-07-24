@@ -1,39 +1,20 @@
-"use client";
-import Loading from '@/components/Loading';
-import SelectionStatus from '@/components/SelectionStatus';
+import SelectionStatus from './SelectionStatus';
 import { Event } from '@/types';
 import axios from 'axios';
 import Link from 'next/link'
-import React, { useEffect, useState } from 'react'
 
-function Event() {
-
-  const [events, setEvents] = useState<Event[]>([]);
-
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    getEvents();
-  }, []);
-
-  const getEvents = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get('/api/event');
-      setEvents(response.data.data);
-    } catch (error: any) {
-    }finally {
-      setTimeout(() => {
-        setLoading(false);
-      }, 500)
-    }
+async function getEvents() {
+  try {
+    const response = await axios.get('http://localhost:3000/api/event');
+    return response.data.data;
+  } catch (error: any) {
+    return null;
   }
+}
 
-  if (loading) {
-    return (
-      <Loading />
-    )
-  }
+async function Event() {
+
+  const events: Event[] = await getEvents();
 
   return (
     <div className="relative py-8">
@@ -45,11 +26,11 @@ function Event() {
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-4 h-4 mr-1">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
           </svg>
-          追加
+          新規目標を追加
         </Link>
       </div>
       
-      {events.length >= 1 && events.map((event) => (
+      {events && events.length >= 1 && events.map((event) => (
         <div key={event._id} className="py-8 max-w-5xl mx-auto mb-8 border-b border-gray-300 dark:border-gray-600">
           <h2 className="mr-4 text-xl text-center font-semibold text-gray-700 dark:text-white">
             {event.title}

@@ -3,11 +3,13 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { Toaster } from 'react-hot-toast'
+import { Suspense } from 'react'
+import Loading from './loading'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'JobTracker',
+  title: '進捗ビジュ',
   description: '選考状況を視覚化して管理するアプリ',
 }
 
@@ -27,7 +29,9 @@ export default function RootLayout({
 
           <main>
             <div className='max-w-7xl mx-auto'>
-              {children}
+              <Suspense fallback={<Loading />}>
+                {children}
+              </Suspense>
             </div>
           </main>
             

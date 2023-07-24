@@ -12,6 +12,26 @@ export async function GET(
     await connectDB();
     const eventId = params.id;
 
+    const token = request.cookies.get("token")?.value || "";
+
+    if (!token) {
+      return NextResponse.json({ message: 'No token provided'}, { status: 401 });
+    }
+
+    let userId: string | undefined;
+    try {
+      const userData = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+      userId = userData._id;
+    } catch(e: any) {
+      return NextResponse.json({ message: 'Failed to authenticate token' }, { status: 401 });
+    }
+
+    const event = await Event.findOne({_id: eventId, userId: userId});
+    if (!event) {
+      
+      return NextResponse.json({ message: "event not found" }, { status: 404 });
+    }
+
     const steps = await Step.find({ eventId: eventId });
 
     return NextResponse.json({

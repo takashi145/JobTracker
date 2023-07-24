@@ -4,10 +4,10 @@ import Event from '@/models/eventModel';
 import Step from '@/models/stepModel';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
+connectDB();
+
 export async function GET() {
   try {
-    await connectDB();
-
     const events = await Event.find().populate('steps', 'name status', Step);
       
     return NextResponse.json({

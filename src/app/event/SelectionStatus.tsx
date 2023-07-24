@@ -1,5 +1,5 @@
+"use client";
 import { Step } from '@/types';
-import Link from 'next/link';
 import { useState, useEffect, FC } from 'react';
 
 interface SelectionStatusProps {
