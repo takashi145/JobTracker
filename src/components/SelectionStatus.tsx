@@ -12,7 +12,7 @@ const SelectionStatus: FC<SelectionStatusProps> = ({ steps }) => {
   useEffect(() => {
     setTimeout(() => {
       const totalSteps = steps.length;
-      const completedSteps = steps.filter(step => step.status === 'completed').length;
+      const completedSteps = steps.filter(step => step.status == 1).length;
       setProgressPercentage((completedSteps / totalSteps) * 100);
     }, 1000);
   }, [steps]);
@@ -36,10 +36,10 @@ const SelectionStatus: FC<SelectionStatusProps> = ({ steps }) => {
       <div className={`w-3/4 flex flex-nowrap overflow-x-auto ${steps.length >= 2 ? 'justify-between' : 'justify-center'}`}>
         {steps.map((step, index) => (
           <div key={index} className="flex flex-col items-center mr-3">
-            <div className={`${step.status === 'completed' ? 'text-blue-500' : 'text-gray-600 dark:text-gray-400'} text-xs sm:text-sm md:text-md`}>
+            <div className={`${step.status == 1 ? 'text-blue-500' : 'text-gray-600 dark:text-gray-400'} text-xs sm:text-sm md:text-md`}>
               {step.name}
             </div>
-            {step.status === 'completed' && (
+            {step.status == 1 && (
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>

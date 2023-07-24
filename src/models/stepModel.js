@@ -13,7 +13,7 @@ const stepSchema = new mongoose.Schema({
   },
   name: String,
   deadline: Date,
-  status: String,
+  status: Number,
   description: String,
 });
 

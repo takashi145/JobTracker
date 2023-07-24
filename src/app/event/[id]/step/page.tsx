@@ -10,13 +10,13 @@ export interface NewStep {
   name: string,
   description: string,
   deadline: Date | null,
-  status: string,
+  status: number,
 }
 
 const AddStep = ({params}: { params: { id: string }}) => {
   const [steps, setSteps] = useState<Step[]>([]);
-  const [newStep, setNewStep] = useState<NewStep>({ name: '', description: '', deadline: null, status: '' });
-  const [editStep, setEditStep] = useState<NewStep>({ name: '', description: '', deadline: null, status: '' });
+  const [newStep, setNewStep] = useState<NewStep>({ name: '', description: '', deadline: null, status: 0 });
+  const [editStep, setEditStep] = useState<NewStep>({ name: '', description: '', deadline: null, status: 0 });
   const [openModal, setOpenModal] = useState(false);
   const [openEditModalId, setOpenEditModalId] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -178,16 +178,18 @@ const AddStep = ({params}: { params: { id: string }}) => {
                                     
                                     <div className='mb-3'>
                                       <label htmlFor="step-status" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Step Status</label>
-                                      <input
-                                        type="text"
-                                        name="step-status"
-                                        id="step-status"
-                                        className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                                        placeholder=""
-                                        required
-                                        value={editStep.status}
-                                        onChange={(e) => setEditStep({...editStep, status: e.target.value})}
-                                      />  
+                                      <select 
+                                          name="step-status" 
+                                          id="step-status" 
+                                          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" 
+                                          value={editStep.status} 
+                                          onChange={(e) => setEditStep({...editStep, status: Number(e.target.value)})}
+                                          required
+                                      >
+                                          <option value="">選択してください</option>
+                                          <option value="0">未完了</option>
+                                          <option value="1">完了</option>
+                                      </select>
                                     </div>
 
                                     <button type='submit' className='text-white bg-blue-500 dark:bg-blue-600 py-2 px-3 rounded shadow w-full'>Save</button>
@@ -224,7 +226,9 @@ const AddStep = ({params}: { params: { id: string }}) => {
           
           <div className='mb-3'>
             <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Step Status</label>
-            <div className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">{step.status}</div>
+            <div className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white">
+              {step.status == 1 ? '完了' : '未完了'}
+            </div>
           </div>
          
         </div>
@@ -300,16 +304,18 @@ const AddStep = ({params}: { params: { id: string }}) => {
                               
                               <div className='mb-3'>
                                 <label htmlFor="step-status" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Step Status</label>
-                                <input
-                                  type="text"
-                                  name="step-status"
-                                  id="step-status"
-                                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                                  placeholder=""
-                                  required
-                                  value={newStep.status}
-                                  onChange={(e) => setNewStep({...newStep, status: e.target.value})}
-                                />  
+                                <select 
+                                    name="step-status" 
+                                    id="step-status" 
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" 
+                                    value={newStep.status} 
+                                    onChange={(e) => setNewStep({...newStep, status: Number(e.target.value)})}
+                                    required
+                                >
+                                    <option value="">選択してください</option>
+                                    <option value="0">未完了</option>
+                                    <option value="1">完了</option>
+                                </select>
                               </div>
 
                               <button type='submit' className='text-white bg-blue-500 dark:bg-blue-600 py-2 px-3 rounded shadow w-full'>Save</button>

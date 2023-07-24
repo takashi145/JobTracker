@@ -4,7 +4,7 @@ export interface Step {
   description: string,
   order: number,
   deadline: Date | null,
-  status: string,
+  status: number,
 }
 
 export interface Event {
