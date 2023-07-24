@@ -15,7 +15,7 @@ export default function CompanyPage({params}: { params: { id: string }}) {
       return 0;
     }
     const totalSteps = event.steps.length;
-    const completedSteps = event.steps.filter(step => step.status === 'completed').length;
+    const completedSteps = event.steps.filter(step => step.status == 1).length;
 
     if (totalSteps === 0) {
       return 0;
@@ -83,7 +83,7 @@ export default function CompanyPage({params}: { params: { id: string }}) {
         <ol className="relative text-gray-500 border-l border-gray-300 dark:border-gray-700 dark:text-gray-400 space-y-20">
           {event.steps.map((step, index) => (
             <li key={index} className="mb-10 sm:mb-12 pl-14 md:pl-12">
-              {step.status === 'completed' ?
+              {step.status == 1 ?
                 <div className="absolute flex items-center justify-center w-12 h-12 bg-green-400 rounded-full -left-4 md:-left-8 ring-4 ring-white dark:ring-gray-900 dark:bg-green-900">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 text-green-100">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
@@ -92,8 +92,9 @@ export default function CompanyPage({params}: { params: { id: string }}) {
                 :
                 <div className="absolute flex items-center justify-center w-12 h-12 bg-gray-300 rounded-full -left-4 md:-left-8 ring-4 ring-white dark:ring-gray-900 dark:bg-gray-700"></div>
               }
-              <h3 className={`pt-3 pb-3 font-medium leading-tight ${step.status === 'completed' ? 'text-blue-400' : ''}`}>{step.name}</h3>
-              <p className='text-sm md:text-md'>{step.deadline ? `日付： ${new Date(step.deadline).toISOString().substring(0, 10)}` : ''}</p>
+              <h3 className={`pt-3 pb-3 font-medium leading-tight ${step.status == 1 ? 'text-blue-400' : ''}`}>{step.name}</h3>
+              <p className='mb-3 text-sm md:text-md'>{step.deadline ? `日付： ${new Date(step.deadline).toISOString().substring(0, 10)}` : ''}</p>
+              <p className='text-sm md:text-md'>{step.description}</p>
             </li>
           ))}
           <li className="mb-10">
