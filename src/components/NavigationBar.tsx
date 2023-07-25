@@ -15,12 +15,18 @@ const NavigationBar = () => {
   const logout = async () => {
     setLoading(true);
 
-    await fetch('/api/auth/logout', {
-      method: 'POST'
-    });
-    setLoading(false);
-    toast.success('ログアウトしました。');
-    router.push('/');
+    try {
+      await fetch('/api/auth/logout', {
+        method: 'POST'
+      });
+      
+      setLoading(false);
+      toast.success('ログアウトしました。');
+      router.push('/');
+    } catch (error: any) {
+      setLoading(false);
+      toast.success('ログアウトに失敗しました。');
+    }
   }
 
   if (pathname === '/') {
