@@ -2,8 +2,9 @@
 import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast';
+import Loading from '../loading';
 
 function Login() {
   const router = useRouter();
@@ -24,15 +25,21 @@ function Login() {
       });
       router.push('/event');
     } catch (error: any) {
+      setLoading(false);
       setUser({...user, password: ""});
       toast.error(error.response.data.message);
-    } finally {
-      setLoading(false);
     }
   }
 
+  useEffect(() => {
+    setLoading(false);
+  }, [])
+
   return (
     <div className='flex justify-center py-14'>
+      { loading && (
+        <Loading />
+      ) }
       <form onSubmit={(e) => {
           e.preventDefault();
           handleLogin();

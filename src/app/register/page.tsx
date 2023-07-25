@@ -1,8 +1,9 @@
 "use client";
 import axios from 'axios';
 import Link from 'next/link';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast';
+import Loading from '../loading';
 
 function Register() {
   const [user, setUser] = useState({
@@ -25,15 +26,21 @@ function Register() {
         password_confirmation: ""
       });
     } catch (error: any) {
+      setLoading(false);
       setUser({...user, password: "", password_confirmation: ""});
       toast.error(error.response.data.message);
-    } finally {
-      setLoading(false);
     }
   }
 
+  useEffect(() => {
+    setLoading(false);
+  }, []);
+
   return (
     <div className='flex justify-center py-14'>
+      { loading && (
+        <Loading />
+      ) }
       <form onSubmit={(e) => {
           e.preventDefault();
           handleRegister();

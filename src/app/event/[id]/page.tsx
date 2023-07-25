@@ -25,9 +25,9 @@ export default async function CompanyPage({params}: { params: { id: string }}) {
   const event: Event = await getEvent(params.id);
 
   return (
-    <div className='pb-12'>
-      <div className="px-8 pt-3">
-        <Link href="/event" className="text-blue-500 hover:text-blue-600 dark:text-blue-400 hover:dark:text-blue-500 hover:underline">
+    <div className='pt-6 pb-8'>
+      <div className="px-8">
+        <Link href="/event" className="text-blue-500 hover:text-blue-600 dark:text-blue-400 hover:dark:text-blue-500 hover:underline" replace>
           ←戻る
         </Link>
       </div>

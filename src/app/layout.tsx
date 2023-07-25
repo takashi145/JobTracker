@@ -9,8 +9,11 @@ import Loading from './loading'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: '進捗ビジュ',
-  description: '選考状況を視覚化して管理するアプリ',
+  title: {
+    default: '進捗ビジュ',
+    template: `進捗ビジュ | %s`
+  },
+  description: '目標達成までの進捗状況を視覚化して管理するアプリ',
 }
 
 export default function RootLayout({
@@ -34,9 +37,7 @@ export default function RootLayout({
               </Suspense>
             </div>
           </main>
-            
         </div>
-        
       </body>
     </html>
   )

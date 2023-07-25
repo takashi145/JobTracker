@@ -1,6 +1,7 @@
 import SelectionStatus from './SelectionStatus';
 import { Event } from '@/types';
 import axios from 'axios';
+import { Metadata } from 'next';
 import Link from 'next/link'
 
 async function getEvents() {
@@ -10,6 +11,10 @@ async function getEvents() {
   } catch (error: any) {
     return null;
   }
+}
+
+export async function generateMetadata(): Promise<Metadata> {
+  return { title: '目標一覧' };
 }
 
 async function Event() {
@@ -22,6 +27,7 @@ async function Event() {
         <Link 
           href="/event/create" 
           className='flex items-center text-sm text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 hover:dark:bg-blue-600 focus:ring-4 px-3 py-2 rounded shadow'
+          replace
         >
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-4 h-4 mr-1">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />

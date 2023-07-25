@@ -1,4 +1,5 @@
 "use client";
+import Loading from '@/app/loading';
 import { Step } from '@/types';
 import axios from 'axios';
 import React, { useContext, useState } from 'react'
@@ -17,8 +18,10 @@ const StepList = ({ steps: initialSteps, eventId }: { steps: Step[], eventId: st
   const [editStep, setEditStep] = useState<NewStep>({ name: '', description: '', deadline: null, status: 0 });
   const [openModal, setOpenModal] = useState(false);
   const [openEditModalId, setOpenEditModalId] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const addStep = async () => {
+    setLoading(true);
     try {
       const response = await axios.post(`/api/event/${eventId}/step`, newStep);
       setSteps([...steps, response.data.data]);
@@ -27,10 +30,13 @@ const StepList = ({ steps: initialSteps, eventId }: { steps: Step[], eventId: st
       setOpenModal(false);
     } catch(error: any) {
       toast.error(error.response.data.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   const updateStep = async (stepId: string) => {
+    setLoading(true);
     try {
       const response = await axios.put(`/api/event/${eventId}/step/${stepId}`, editStep);
       setSteps(steps => steps.map(step => {
@@ -43,23 +49,32 @@ const StepList = ({ steps: initialSteps, eventId }: { steps: Step[], eventId: st
       toast.success(response.data.message);
     } catch(error: any) {
       toast.error(error.response.data.message);
+    } finally {
+      setLoading(false);
     }
   }
 
   const deleteStep = async (stepId: string) => {
     if (! confirm('削除してもよろしいですか？')) return;
     
+    setLoading(true);
     try {
       const response = await axios.delete(`/api/event/${eventId}/step/${stepId}`);
       setSteps(steps => steps.filter(step => step._id !== stepId));
       toast.success(response.data.message);
     } catch(error: any) {
       toast.error(error.response.data.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <>
+      { loading && (
+        <Loading />
+      ) }
+      
       <div className="w-full grid md:grid-cols-2 lg:grid-cols-3 gap-6">
       {steps.map((step, index) => (
         <div key={step._id} className="mb-8 lg:mb-0 w-full max-w-xl p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 dark:bg-slate-800 dark:border-gray-700">

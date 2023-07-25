@@ -8,9 +8,9 @@ export default async function Home() {
             <h1 className="mb-8 text-5xl font-extrabold tracking-tight leading-none text-white md:text-6xl lg:text-7xl">
               <ApplicationLogo />
             </h1>
-            <p className="mb-10 text-lg md:text-xl font-normal text-gray-300 lg:text-2xl sm:px-16 lg:px-48">
-              進捗状況を視覚化
-            </p>
+            {/* <p className="mb-10 text-lg md:text-xl font-normal text-gray-300 lg:text-2xl sm:px-16 lg:px-48">
+              進捗状況を視覚化し、目標達成
+            </p> */}
             <div className="flex flex-col space-y-4 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4">
                 <Link href="/login" className="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-900">
                     Get started
