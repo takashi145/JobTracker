@@ -16,9 +16,22 @@ function Login() {
 
   const handleLogin = async () => {
     setLoading(true);
+
     try {
-      const response = await axios.post('/api/auth/login', user);
-      toast.success(response.data.message);
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(user)
+      });
+    
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message);
+      }
+    
+      toast.success('ログインしました。');
       setUser({
         email: "",
         password: "",
@@ -27,9 +40,10 @@ function Login() {
     } catch (error: any) {
       setLoading(false);
       setUser({...user, password: ""});
-      toast.error(error.response.data.message);
+      toast.error(error.message);
     }
   }
+    
 
   useEffect(() => {
     setLoading(false);

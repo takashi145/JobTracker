@@ -1,26 +1,22 @@
-import axios from 'axios';
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
 import StepList from './StepList';
 import { Step } from '@/types';
 import { cookies } from 'next/headers';
-import { Suspense } from 'react';
-import Loading from '@/app/loading';
 
 async function getSteps(eventId: string) {
-  try {
-    const response = await axios.get(`http://localhost:3000/api/event/${eventId}/step`, {
-      headers: {
-        Cookie: `token=${cookies().get("token")?.value}`,
-      },
-    });
-    return response.data.data;
-  } catch(error: any) {
-    if (error.response.status === 404) {
-      notFound();
-    }
-    throw new Error("Error");
-  }
+  const res = await fetch(`${process.env.APP_URL}/api/event/${eventId}/step`, {
+    headers: {
+      Cookie: `token=${cookies().get("token")?.value}`,
+    },
+    cache: 'no-store',
+  });
+
+  if (!res.ok) {
+		throw new Error(`Failed to fetch data`);
+	}
+
+  const { data } = await res.json();
+  return data;
 }
 
 const AddStep = async ({params}: { params: { id: string }}) => {

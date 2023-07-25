@@ -6,9 +6,23 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 
 connectDB();
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const events = await Event.find().populate('steps', 'name status', Step);
+    const token = request.cookies.get("token")?.value || "";
+
+    if (!token) {
+      return NextResponse.json({ message: 'No token provided'}, { status: 401 });
+    }
+
+    let userId: string | undefined;
+    try {
+      const userData = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+      userId = userData._id;
+    } catch(e: any) {
+      return NextResponse.json({ message: 'Failed to authenticate token' }, { status: 401 });
+    }
+
+    const events = await Event.find({userId: userId}).populate('steps', 'name status', Step);
       
     return NextResponse.json({
       message: "successfully",
@@ -22,8 +36,6 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    await connectDB();
-
     const req = await request.json();
 
     const token = request.cookies.get("token")?.value || "";

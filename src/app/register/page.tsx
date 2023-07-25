@@ -1,9 +1,9 @@
 "use client";
-import axios from 'axios';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-hot-toast';
 import Loading from '../loading';
+import { useRouter } from 'next/navigation';
 
 function Register() {
   const [user, setUser] = useState({
@@ -13,22 +13,37 @@ function Register() {
     password_confirmation: "",
   })
   const [loading, setLoading] = useState(false); 
+  const router = useRouter();
 
   const handleRegister = async () => {
     setLoading(true);
     try {
-      const response = await axios.post('/api/auth/register', user);
-      toast.success(response.data.message);
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+      },
+        body: JSON.stringify(user),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message);
+      }
+
+      toast.success('登録しました。');
       setUser({
         name: "",
         email: "",
         password: "",
         password_confirmation: ""
       });
+      router.push('/login');
+      router.refresh();
     } catch (error: any) {
       setLoading(false);
       setUser({...user, password: "", password_confirmation: ""});
-      toast.error(error.response.data.message);
+      toast.error(error.message);
     }
   }
 

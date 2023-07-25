@@ -1,24 +1,21 @@
 import Link from 'next/link';
 import { Event } from '@/types';
-import axios from 'axios';
 import { cookies } from 'next/headers';
-import { notFound } from 'next/navigation';
 import ShowEvent from './ShowEvent';
 
 async function getEvent(id: string) {
-  try {
-    const response = await axios.get(`http://localhost:3000/api/event/${id}`, {
-      headers: {
-        Cookie: `token=${cookies().get("token")?.value}`,
-      },
-    });
-    return response.data.data;
-  } catch (error: any) {
-    if (error.response.status === 404) {
-      notFound();
-    }
-    throw new Error("Failed to fetch event");
-  }
+  const res = await fetch(`${process.env.APP_URL}/api/event/${id}`, {
+    headers: {
+      Cookie: `token=${cookies().get("token")?.value}`,
+    },
+  });
+
+  if (!res.ok) {
+		throw new Error(`Failed to fetch event`);
+	}
+
+  const { data } = await res.json();
+  return data
 }
 
 export default async function CompanyPage({params}: { params: { id: string }}) {

@@ -2,6 +2,7 @@
 import Loading from '@/app/loading';
 import { Step } from '@/types';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
 import React, { useContext, useState } from 'react'
 import { toast } from 'react-hot-toast';
 
@@ -20,16 +21,31 @@ const StepList = ({ steps: initialSteps, eventId }: { steps: Step[], eventId: st
   const [openEditModalId, setOpenEditModalId] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  const router = useRouter();
+
   const addStep = async () => {
     setLoading(true);
     try {
-      const response = await axios.post(`/api/event/${eventId}/step`, newStep);
-      setSteps([...steps, response.data.data]);
-      toast.success(response.data.message);
+      const res = await fetch(`/api/event/${eventId}/step`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newStep)
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message);
+      }
+      const { data } = await res.json();
+      setSteps([...steps, data]);
+      toast.success('追加しました。');
       setNewStep({ name: '', description: '', deadline: null, status: 0 });
       setOpenModal(false);
+      router.refresh();
     } catch(error: any) {
-      toast.error(error.response.data.message);
+      toast.error(error.message);
     } finally {
       setLoading(false);
     }
@@ -38,17 +54,32 @@ const StepList = ({ steps: initialSteps, eventId }: { steps: Step[], eventId: st
   const updateStep = async (stepId: string) => {
     setLoading(true);
     try {
-      const response = await axios.put(`/api/event/${eventId}/step/${stepId}`, editStep);
+      const res = await fetch(`/api/event/${eventId}/step/${stepId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(editStep),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+      throw new Error(errorData.message);
+      }
+
+      const { data } = await res.json();
+
       setSteps(steps => steps.map(step => {
         if (step._id === stepId) {
-          return response.data.data;
+          return data;
         }
         return step;
       }));
       setOpenEditModalId(null);
-      toast.success(response.data.message);
+      toast.success('ステップを更新しました。');
+      router.refresh();
     } catch(error: any) {
-      toast.error(error.response.data.message);
+      toast.error(error.message);
     } finally {
       setLoading(false);
     }
@@ -59,11 +90,20 @@ const StepList = ({ steps: initialSteps, eventId }: { steps: Step[], eventId: st
     
     setLoading(true);
     try {
-      const response = await axios.delete(`/api/event/${eventId}/step/${stepId}`);
+      const res = await fetch(`/api/event/${eventId}/step/${stepId}`, {
+        method: 'DELETE'
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message);
+      }
+
       setSteps(steps => steps.filter(step => step._id !== stepId));
-      toast.success(response.data.message);
+      toast.success('削除しました。');
+      router.refresh();
     } catch(error: any) {
-      toast.error(error.response.data.message);
+      toast.error(error.message);
     } finally {
       setLoading(false);
     }

@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
 
     const user = await User.findOne({ email: req.email });
     if (user) {
-      throw new Error("email already exists");
+      throw new Error("入力したメールアドレスは既に存在します。");
     }
 
     const salt = await bcrypt.genSalt(10);

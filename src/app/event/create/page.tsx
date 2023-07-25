@@ -1,7 +1,6 @@
 "use client";
 import React, { useState } from 'react';
 import Link from 'next/link';
-import axios from 'axios';
 import { toast } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import Loading from '@/app/loading';
@@ -22,15 +21,29 @@ const CreateEvent = () => {
     };
 
     try {
-      const response = await axios.post('/api/event', data);
-      toast.success(response.data.message);
+      const res = await fetch('/api/event', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message);
+      }
+      toast.success('作成に成功しました。');
+
       router.push('/event');
+      router.refresh();
     } catch(error: any) {
       setLoading(false);
-      toast.error(error.response.data.message);
+      toast.error(error.message);
+    } finally {
+      setNewEventTitle('');
+      setNewEventDescription('');
     }
-    setNewEventTitle('');
-    setNewEventDescription('');
   };
 
   return (

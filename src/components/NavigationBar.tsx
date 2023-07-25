@@ -3,7 +3,6 @@ import Link from 'next/link'
 import React, { useState } from 'react'
 import ApplicationLogo from './ApplicationLogo';
 import { toast } from 'react-hot-toast';
-import axios from 'axios';
 import { useRouter, usePathname } from 'next/navigation';
 import Loading from '@/app/loading';
 
@@ -15,16 +14,13 @@ const NavigationBar = () => {
 
   const logout = async () => {
     setLoading(true);
-    try {
-      await axios.post('/api/auth/logout');
-      setTimeout(() => {
-        setLoading(false);
-        router.push('/');
-      }, 1000);
-      toast.success('ログアウトしました。');
-    } catch(error: any) {
-      toast.error('失敗しました。');
-    }
+
+    await fetch('/api/auth/logout', {
+      method: 'POST'
+    });
+    setLoading(false);
+    toast.success('ログアウトしました。');
+    router.push('/');
   }
 
   if (pathname === '/') {

@@ -1,10 +1,16 @@
 "use client";
+import Loading from '@/app/loading';
 import { Event } from '@/types';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useMemo, useState } from 'react'
+import { toast } from 'react-hot-toast';
 
 const ShowEvent = ({ event }: { event: Event }) => {
   const [animatedProgress, setAnimatedProgress] = useState(0);
+  const [loading, setLoading] = useState(false);
+
+  const router = useRouter();
 
   const progressPercentage = useMemo(() => {
     if (!event) {
@@ -19,6 +25,27 @@ const ShowEvent = ({ event }: { event: Event }) => {
 
     return Math.round((completedSteps / totalSteps) * 100);
   }, [event]);
+
+  const deleteEvent = async () => {
+    if (!confirm('本当に削除してよろしいですか？')) return;
+    
+    setLoading(true);
+    try {
+      await fetch(`/api/event/${event._id}`, {
+        method: 'DELETE'
+      });
+      toast.success('削除しました。');
+      router.push('/event');
+      router.refresh();
+    } catch (error: any) {
+      setLoading(false);
+      toast.error('削除に失敗しました。');
+    }
+  }
+
+  useEffect(() => {
+    setLoading(false);
+  }, []);
   
   useEffect(() => {
     let currentProgress = 0;
@@ -39,12 +66,38 @@ const ShowEvent = ({ event }: { event: Event }) => {
   
   return (
     <>
-      <div className="mt-4 mx-3 space-y-3">
+      { loading && (
+        <Loading />
+      )}
+
+      <div className="my-4 mx-3">
         <h2 className="text-gray-700 text-3xl font-semibold text-center dark:text-white">{event.title}</h2>
-        <p className="px-3 sm:px-0 w-full sm:w-2/3 mx-auto text-gray-700 font-semibold dark:text-gray-300 text-center" style={{wordWrap: 'break-word'}}>{event.description}</p>
+        <div className='flex items-center justify-center space-x-6'>
+          <form onSubmit={(e) => {
+            e.preventDefault();
+            deleteEvent();
+          }}>
+            <button type="submit" className='text-sm flex items-center text-red-500 dark:text-red-400 hover:underline'>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-4 h-4 mr-1 text-red-500 dark:text-red-400">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+              </svg>
+              Delete
+            </button>
+          </form>
+          
+
+          <button className='text-sm flex items-center text-blue-500 dark:text-blue-400 hover:underline'>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-4 h-4 mr-1">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
+            </svg>
+            Edit
+          </button>
+        </div>
+
+        <p className="mt-3 px-3 sm:px-0 w-full sm:w-2/3 mx-auto text-gray-700 font-semibold dark:text-gray-300 text-center" style={{wordWrap: 'break-word'}}>{event.description}</p>
       </div>
       
-      <div className="sm:p-12 mb-12 flex justify-center flex-col-reverse sm:flex-row items-center sm:space-x-20 lg:space-x-32">
+      <div className="sm:px-12 sm:pb-12 my-12 flex justify-center flex-col-reverse sm:flex-row items-center sm:space-x-20 lg:space-x-32">
         {/* 進捗ステップ */}
         <ol className="relative text-gray-500 border-l border-gray-300 dark:border-gray-700 dark:text-gray-400 space-y-20">
           {event.steps.map((step, index) => (
@@ -73,7 +126,7 @@ const ShowEvent = ({ event }: { event: Event }) => {
         </ol>
         
         {/* 進捗パーセント */}
-        <div className='mb-12 sm:sticky top-40'>
+        <div className='mb-8 md:mb-0 sm:sticky top-40'>
           <div className="relative sm:mb-0 w-60 h-60 lg:w-72 lg:h-72">
             <svg className="w-full h-full fill-gray-400 dark:fill-black" viewBox="0 0 36 36">
               <path className="text-gray-300 dark:text-gray-700 stroke-current stroke-2" d="M18 2.0845
