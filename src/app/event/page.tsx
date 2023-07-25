@@ -48,7 +48,7 @@ async function Event() {
             event.steps.length === 0 && (
               <div className="flex flex-col md:flex-row items-center justify-center text-center dark:text-gray-400">
                 ステップが登録されていません。
-                <Link href={`/event/${event._id}/step`} className='mt-2 ml-2 text-blue-500 dark:text-blue-400 underline'>ステップを追加→</Link>
+                <Link href={`/event/${event._id}/step`} className='mt-2 text-blue-500 dark:text-blue-400 underline'>ステップを追加→</Link>
               </div>
             )
           }
