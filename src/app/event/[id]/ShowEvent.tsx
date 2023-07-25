@@ -45,6 +45,7 @@ const ShowEvent = ({ event }: { event: Event }) => {
       </div>
       
       <div className="sm:p-12 mb-12 flex justify-center flex-col-reverse sm:flex-row items-center sm:space-x-20 lg:space-x-32">
+        {/* 進捗ステップ */}
         <ol className="relative text-gray-500 border-l border-gray-300 dark:border-gray-700 dark:text-gray-400 space-y-20">
           {event.steps.map((step, index) => (
             <li key={index} className="mb-10 sm:mb-12 pl-14 md:pl-12">
@@ -71,8 +72,9 @@ const ShowEvent = ({ event }: { event: Event }) => {
           </li>
         </ol>
         
-        <div className='sm:sticky top-40'>
-          <div className="relative mb-16 sm:mb-0 w-60 h-60 lg:w-72 lg:h-72">
+        {/* 進捗パーセント */}
+        <div className='mb-12 sm:sticky top-40'>
+          <div className="relative sm:mb-0 w-60 h-60 lg:w-72 lg:h-72">
             <svg className="w-full h-full" viewBox="0 0 36 36">
               <path className="text-gray-400 dark:text-gray-700 stroke-current stroke-2" d="M18 2.0845
                 a 15.9155 15.9155 0 0 1 0 31.831
@@ -85,14 +87,17 @@ const ShowEvent = ({ event }: { event: Event }) => {
               <span className="text-2xl font-semibold text-white">{Math.round(animatedProgress)}%</span>
             </div>
           </div>
-          <div className='mt-3 text-center'>
-            <Link href={`/event/${event._id}/step`} className='text-blue-500 dark:text-blue-400 hover:underline' replace>ステップを管理 →</Link>
+          <div className='mt-3 flex justify-center'>
+            <Link href={`/event/${event._id}/step`} className='flex items-center text-blue-500 dark:text-blue-400 hover:underline' replace>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-4 h-4 mr-2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" />
+              </svg>
+              ステップを管理 →
+            </Link>
           </div>
         </div>
-        
       </div>
     </>
-    
   )
 }
 
