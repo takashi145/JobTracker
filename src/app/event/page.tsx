@@ -23,7 +23,7 @@ async function Event() {
 
   return (
     <div className="relative py-8">
-      <div className='flex justify-end pr-4 pb-3 border-b border-gray-600'>
+      <div className='mb-12 flex justify-end pr-4 pb-3 border-b border-gray-300 dark:border-gray-600'>
         <Link 
           href="/event/create" 
           className='flex items-center text-sm text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 hover:dark:bg-blue-600 focus:ring-4 px-3 py-2 rounded shadow'

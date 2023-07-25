@@ -20,7 +20,7 @@ const SelectionStatus: FC<SelectionStatusProps> = ({ steps }) => {
   return (
     <div className="flex flex-col items-center justify-center py-8 space-y-4">
       <div className="w-full flex items-center justify-center">
-        <div className="w-3/4 h-3 bg-white rounded-full flex items-center overflow-hidden dark:bg-gray-200">
+        <div className="w-3/4 h-3 bg-white shadow border dark:border-0 rounded-full flex items-center overflow-hidden dark:bg-gray-200">
           <div 
             className={`${progressPercentage === 100 ? 'bg-green-400 dark:bg-green-500' : 'bg-blue-500'} h-3 rounded-full`}
             style={{ transitionDuration: '2s', width: `${progressPercentage}%` }}

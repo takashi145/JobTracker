@@ -75,8 +75,8 @@ const ShowEvent = ({ event }: { event: Event }) => {
         {/* 進捗パーセント */}
         <div className='mb-12 sm:sticky top-40'>
           <div className="relative sm:mb-0 w-60 h-60 lg:w-72 lg:h-72">
-            <svg className="w-full h-full" viewBox="0 0 36 36">
-              <path className="text-gray-400 dark:text-gray-700 stroke-current stroke-2" d="M18 2.0845
+            <svg className="w-full h-full fill-gray-400 dark:fill-black" viewBox="0 0 36 36">
+              <path className="text-gray-300 dark:text-gray-700 stroke-current stroke-2" d="M18 2.0845
                 a 15.9155 15.9155 0 0 1 0 31.831
                 a 15.9155 15.9155 0 0 1 0 -31.831" />
               <path className={`${ animatedProgress === 100 ? ' text-green-400' : 'text-blue-500'} stroke-current stroke-2`} strokeDasharray="100, 100" style={{strokeDashoffset: (100 - animatedProgress)}} d="M18 2.0845
