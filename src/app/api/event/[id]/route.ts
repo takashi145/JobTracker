@@ -42,6 +42,49 @@ export async function GET(
   }
 }
 
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: {id: string }}
+) {
+  try {
+    const req = await request.json();
+
+    const eventId = params.id;
+
+    const token = request.cookies.get("token")?.value || "";
+
+    if (!token) {
+      return NextResponse.json({ message: 'No token provided'}, { status: 401 });
+    }
+
+    let userId: string | undefined;
+    try {
+      const userData = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+      userId = userData._id;
+    } catch(e: any) {
+      return NextResponse.json({ message: 'Failed to authenticate token' }, { status: 401 });
+    }
+
+    const event = await Event.findOne({userId: userId, _id: eventId});
+    if (!event) {
+      return NextResponse.json({ message: 'Event not found'}, { status: 404 });
+    }
+
+    if(req.title !== undefined) event.title = req.title;
+    if(req.description !== undefined) event.description = req.description;
+
+    await event.save();
+    
+    return NextResponse.json({
+      message: "successfully",
+      success: true,
+      data: event,
+    });
+  } catch (error: any) {
+    return NextResponse.json({ message: error.message }, { status: 500 });
+  }
+}
+
 export async function DELETE(
   request: NextRequest,
   { params }: { params: {id: string }}

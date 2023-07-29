@@ -1,48 +1,39 @@
 "use client";
-import React, { useState } from 'react';
-import Link from 'next/link';
-import { toast } from 'react-hot-toast';
-import { useRouter } from 'next/navigation';
 import Loading from '@/app/loading';
+import { Event } from '@/types';
+import { useRouter } from 'next/navigation';
+import React, { useState } from 'react'
+import { toast } from 'react-hot-toast';
 
-const CreateEvent = () => {
-  const [newEventTitle, setNewEventTitle] = useState('');
-  const [newEventDescription, setNewEventDescription] = useState('');
+const UpdateForm = ({ event: initialEvent }: { event: Event }) => {
+  const [event, setEvent] = useState(initialEvent);
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
-  const addEvent = async () => {
+  const updateEvent = async () => {
     setLoading(true);
 
-    const data = {
-      title: newEventTitle,
-      description: newEventDescription
-    };
-
     try {
-      const res = await fetch('/api/event', {
-        method: 'POST',
+      const res = await fetch(`/api/event/${event._id}`, {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(event),
       });
 
       if (!res.ok) {
         const errorData = await res.json();
         throw new Error(errorData.message);
       }
-      toast.success('作成に成功しました。');
+      toast.success('更新に成功しました。');
 
-      router.push('/event');
+      router.push(`/event/${event._id}`);
       router.refresh();
     } catch(error: any) {
       setLoading(false);
       toast.error(error.message);
-    } finally {
-      setNewEventTitle('');
-      setNewEventDescription('');
     }
   };
 
@@ -52,16 +43,10 @@ const CreateEvent = () => {
         <Loading />
       ) }
 
-      <div className="p-3">
-        <Link href="/event" className="text-blue-500 hover:text-blue-600 dark:text-blue-400 hover:dark:text-blue-500 hover:underline">
-          ←戻る
-        </Link>
-      </div>
-
       <form 
         onSubmit={(e) => {
           e.preventDefault();
-          addEvent();
+          updateEvent();
         }} 
         method="POST" 
         className="pt-4 pb-12"
@@ -79,8 +64,8 @@ const CreateEvent = () => {
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
                   placeholder=""
                   required
-                  value={newEventTitle}
-                  onChange={(e) => setNewEventTitle(e.target.value)}
+                  value={event.title}
+                  onChange={(e) => setEvent({...event, title: e.target.value})}
                 />
               </div>
               <div>
@@ -90,24 +75,22 @@ const CreateEvent = () => {
                   id="description"
                   placeholder=""
                   className="h-20 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
-                  value={newEventDescription}
-                  onChange={(e) => setNewEventDescription(e.target.value)}
+                  value={event.description}
+                  onChange={(e) => setEvent({...event, description: e.target.value})}
                 ></textarea>
               </div>
               <button
                 type="submit"
                 className="w-full text-blue-500 hover:text-white border border-blue-500 hover:border-blue-600 hover:bg-blue-400 rounded-lg p-2 mb-4"
               >
-                作成
+                更新
               </button>
             </div>
           </div>
         </div>
       </form>
     </>
-    
-  );
-  
-};
+  )
+}
 
-export default CreateEvent;
+export default UpdateForm
