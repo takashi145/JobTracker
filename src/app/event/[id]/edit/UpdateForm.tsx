@@ -53,7 +53,7 @@ const UpdateForm = ({ event: initialEvent }: { event: Event }) => {
       >
         <div className="mt-12 flex flex-col lg:flex-row items-center lg:items-start justify-center lg:space-x-8">
           <div className="mb-8 lg:mb-0 w-full max-w-lg md:max-w-xl p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-slate-800 dark:border-gray-700 lg:sticky top-16">
-            <h6 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">目標の追加</h6>
+            <h6 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">目標を編集</h6>
             <div className="space-y-6">
               <div>
                 <label htmlFor="title" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
